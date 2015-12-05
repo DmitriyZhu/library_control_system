@@ -25,6 +25,7 @@ class Book{
 					status_id = :status_id
 				WHERE book_id = :book_id
 			";
+
 			$state = $this->db->prepareSql($sql);
 			$state->setParam('title',$this->title)
 				->setParam('description',$this->description)
@@ -38,6 +39,7 @@ class Book{
 					(title,description,author_id,status_id)
 					VALUES (:title,:description,:author_id,:status_id)
 			";
+
 			$state = $this->db->prepareSql($sql);
 			$this->book_id = 
 				$state->setParam('title','\''.$this->title.'\'')
@@ -49,6 +51,29 @@ class Book{
 		}
 	}
 	
+	public function getData(){
+		$sql = "
+			SELECT *
+			FROM book
+			WHERE 1=1
+				".($this->book_id?"AND id = ".$this->book_id:"")."
+				".($this->author_id?"AND author_id = ".$this->author_id:"")."
+				".($this->status_id?"AND status_id = ".$this->status_id:"")."
+				".($this->title?"AND status LIKE '".$this->author_id."'":"")."
+				".($this->description?"AND description LIKE '".$this->description."'":"")."
+		";
+
+		$state = $this->db->prepareSql($sql);
+		$book = $state->exec();
+		/*
+		$books_array = [];
+		while($row = $books->getRow()){
+			$books_array[] = $row;
+		}
+		*/
+		$books_array = $book->getRows();
+		return $books_array;
+	}
 	
 
 }

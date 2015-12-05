@@ -53,11 +53,11 @@ class db{
 			default:
 				break;
 		}
+
 		return $this;
 	}
 
 	public function exec(){
-		echo $this->sql;
 		switch($this->db_type){
 			case 'mysql':
 				$this->res = mysql_query($this->sql) 
@@ -70,7 +70,27 @@ class db{
 	}
 
 	public function getRow(){
-		return mysql_fetch_row($this->res);
+		switch($this->db_type){
+			case 'mysql':
+				return mysql_fetch_row($this->res);
+				break;
+			default:
+				break;
+		}
+	}
+
+	public function getRows(){
+		switch($this->db_type){
+			case 'mysql':
+				$rows = [];
+				while($row = mysql_fetch_row($this->res)){
+					$rows[] = $row;
+				}
+				return $rows;
+				break;
+			default:
+				break;
+		}
 	}
 
 	public function getLastInsertId(){
