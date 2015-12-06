@@ -6,9 +6,7 @@ class Book{
 	public $description;
 	public $title;
 	public $status_id;
-	public $book_id;
-
-	static $fields = [];
+	public $id;
 
 	function __construct($db){
 		$this->db = $db;
@@ -23,15 +21,15 @@ class Book{
 					description = :description,
 					author_id = :author_id,
 					status_id = :status_id
-				WHERE book_id = :book_id
+				WHERE id = :id
 			";
 
 			$state = $this->db->prepareSql($sql);
-			$state->setParam('title',$this->title)
-				->setParam('description',$this->description)
+			$state->setParam('title','\''.$this->title.'\'')
+				->setParam('description','\''.$this->description.'\'')
 				->setParam('author_id',$this->author_id)
-				->setParam('status',$this->status_id)
-				->setParam('book_id',$this->book_id)
+				->setParam('status_id',$this->status_id)
+				->setParam('id',$this->id)
 				->exec();
 		}else{
 			$sql = "
@@ -56,7 +54,7 @@ class Book{
 			SELECT *
 			FROM book
 			WHERE 1=1
-				".($this->book_id?"AND id = ".$this->book_id:"")."
+				".($this->id?"AND id = ".$this->id:"")."
 				".($this->author_id?"AND author_id = ".$this->author_id:"")."
 				".($this->status_id?"AND status_id = ".$this->status_id:"")."
 				".($this->title?"AND status LIKE '".$this->author_id."'":"")."
@@ -64,15 +62,15 @@ class Book{
 		";
 
 		$state = $this->db->prepareSql($sql);
-		$book = $state->exec();
+		$handler = $state->exec();
 		/*
 		$books_array = [];
 		while($row = $books->getRow()){
 			$books_array[] = $row;
 		}
 		*/
-		$books_array = $book->getRows();
-		return $books_array;
+		$data_array = $handler->getRows();
+		return $data_array;
 	}
 	
 
