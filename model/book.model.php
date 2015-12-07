@@ -54,15 +54,20 @@ class Book{
 			SELECT *
 			FROM book
 			WHERE 1=1
-				".($this->id?"AND id = ".$this->id:"")."
-				".($this->author_id?"AND author_id = ".$this->author_id:"")."
-				".($this->status_id?"AND status_id = ".$this->status_id:"")."
-				".($this->title?"AND status LIKE '".$this->author_id."'":"")."
-				".($this->description?"AND description LIKE '".$this->description."'":"")."
+				".($this->id?"AND id = :id":"")."
+				".($this->author_id?"AND author_id = :author_id":"")."
+				".($this->status_id?"AND status_id = :status_id":"")."
+				".($this->title?"AND title LIKE :title":"")."
+				".($this->description?"AND description LIKE :description":"")."
 		";
 
 		$state = $this->db->prepareSql($sql);
-		$handler = $state->exec();
+		$handler = $state
+				->setParam('title',"'".$this->title."'")
+				->setParam('description',"'".$this->description."'")
+				->setParam('author_id',$this->author_id)
+				->setParam('status_id',$this->status_id)
+				->exec();
 		/*
 		$books_array = [];
 		while($row = $books->getRow()){

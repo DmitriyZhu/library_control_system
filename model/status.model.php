@@ -1,6 +1,7 @@
-<?php 
-//using active record
-class Author{ 
+<?php
+
+
+class Status{
 	public $db;
 	public $name;
 	public $id;
@@ -12,26 +13,28 @@ class Author{
 	public function save(){
 		if(!empty($this->id)){
 			$sql = "
-				UPDATE book_author 
+				UPDATE book_status 
 				SET 
 					name = :name
 				WHERE id = :id
 			";
 
 			$state = $this->db->prepareSql($sql);
-			$state->setParam('name',"'".$this->name."'")
+			$state
+				->setParam('name',"'".$this->name."'")
 				->setParam('id',$this->id)
 				->exec();
 		}else{
 			$sql = "
-				INSERT INTO book_author 
+				INSERT INTO book_status 
 					(name)
 					VALUES (:name)
 			";
 
 			$state = $this->db->prepareSql($sql);
 			$this->book_id = 
-				$state->setParam('name',"'".$this->name."'")
+				$state
+					->setParam('name',"'".$this->name."'")
 					->exec()
 					->getLastInsertId();
 		}
@@ -54,8 +57,10 @@ class Author{
 		$data_array = $handler->getRows();
 		return $data_array;
 	}
-	
+
+
 
 }
 
-#eof
+
+#EOF
